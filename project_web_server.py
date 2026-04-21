@@ -24,11 +24,6 @@ def log_request(client_addr, filename, status):
     now_time = datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
     try:
 
-    #     if not os.path.exists("server.log"):
-    #         mode = "w"
-    #     else:
-    #         mode = "a"
-
         with open("server.log", "a", encoding="utf-8") as f:
             f.write(f"{ip} | {now_time} | {filename} | {status} \n")
         print(f"Logged: {ip} | {now_time} | {filename} | {status}")
@@ -47,7 +42,7 @@ def handle_request(request):
     return response
 '''
 # stage 2 http txt image 403
-# Handle HTTP request - Stage 3 (fixed version)
+# Handle HTTP request
 def handle_request(request, client_addr):
     headers = request.split('\n')
     fields = headers[0].split()
@@ -61,7 +56,7 @@ def handle_request(request, client_addr):
             log_request(client_addr, filename, status )
             return 'HTTP/1.1 403 Forbidden\r\n\r\n403 Forbidden', status
 
-        # ←←← PASTE THE 304 BLOCK HERE
+
         if request_type in ['GET', 'HEAD']:
             if_mod = None
             for line in headers:
@@ -179,20 +174,7 @@ def work_client(client_connection, client_addr):
             client_connection.close()
         except:
             pass
-'''single thread
-while True:
-    client_connection, client_addr = server_socket.accept()
-    print('New connection from ', client_addr)
-    request = client_connection.recv(1024).decode()
-    response, status = handle_request(request, client_addr)
 
-    if isinstance(response, str):
-        client_connection.sendall(response.encode())
-    else:
-        client_connection.sendall(response)
-    
-    client_connection.close()
-    '''
 
     #start a new thread
 
